@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import '../MediaKit.css'
-import { MEDIA_KIT, AGE_BARS, CITIES, OFFERS } from './data'
-import { formatMediaKitDate } from './utils'
+import { MEDIA_KIT, AGE_BARS, CITIES, OFFERS, REELS } from './data'
+import { formatMediaKitDate, bestReelViewsForHero } from './utils'
 import { formatCompactMetric } from './numberFormat'
 import { useInstagramProfile } from './hooks/useInstagramProfile'
+import { useReelGridMetrics } from './hooks/useReelGridMetrics'
 import MediaKitCover from './MediaKitCover'
 import MediaKitProfile from './MediaKitProfile'
 import MediaKitPerformances from './MediaKitPerformances'
@@ -25,19 +26,30 @@ export default function MediaKit() {
   const metaLastUpdated = MEDIA_KIT.meta.lastUpdated
 
   const { followersCount, profileErr } = useInstagramProfile()
+  const reelGrid = useReelGridMetrics(REELS)
 
   const followersFormatted = useMemo(() => {
     if (followersCount == null) return null
     return formatCompactMetric(followersCount)
   }, [followersCount])
 
+  const bestReelFormatted = useMemo(() => {
+    const views = bestReelViewsForHero(REELS, reelGrid)
+    if (views == null) return null
+    return formatCompactMetric(views)
+  }, [reelGrid])
+
   const heroStats = useMemo(() => {
-    return h.stats.map((s) => ({
-      ...s,
-      value:
-        s.label === 'Abonnés' && followersFormatted ? followersFormatted : s.value,
-    }))
-  }, [h.stats, followersFormatted])
+    return h.stats.map((s) => {
+      if (s.label === 'Abonnés' && followersFormatted) {
+        return { ...s, value: followersFormatted }
+      }
+      if (s.label === 'Best reel' && bestReelFormatted) {
+        return { ...s, value: bestReelFormatted }
+      }
+      return s
+    })
+  }, [h.stats, followersFormatted, bestReelFormatted])
 
   const perfCells = useMemo(() => {
     return perf.cells.map((cell) => ({
@@ -76,7 +88,7 @@ export default function MediaKit() {
         <main className="mkit-main" id="mkit-main">
           <MediaKitProfile />
           <MediaKitPerformances perfCells={perfCells} />
-          <MediaKitReelsTable />
+          <MediaKitReelsTable reelGrid={reelGrid} />
           <MediaKitAudience audience={aud} ageBars={AGE_BARS} cities={CITIES} />
           <MediaKitOffers offers={OFFERS} />
           <MediaKitContact contact={c} />

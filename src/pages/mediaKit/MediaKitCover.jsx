@@ -44,9 +44,6 @@ export default function MediaKitCover({
               </li>
             ))}
           </ul>
-          {followersFormatted ? (
-            <p className="mkit-api-note">Abonnés · Instagram Graph API</p>
-          ) : null}
         </aside>
       </div>
     </header>

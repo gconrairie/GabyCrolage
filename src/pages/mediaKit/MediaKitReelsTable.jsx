@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import SectionHead from './SectionHead'
 import { REELS } from './data'
-import { useReelGridMetrics } from './hooks/useReelGridMetrics'
 import { buildRankedReelRows, formatReelMediaMeta, reelDisplayHeadline } from './utils'
 import { formatCompactMetric } from './numberFormat'
 import ReelEngagementMetrics from './ReelEngagementMetrics'
@@ -12,9 +11,7 @@ import ReelEngagementMetrics from './ReelEngagementMetrics'
 const reelGridCols =
   'grid grid-cols-[1fr_6rem] sm:grid-cols-[1fr_6rem_16rem] items-start gap-x-3 '
 
-export default function MediaKitReelsTable() {
-  const reelGrid = useReelGridMetrics(REELS)
-
+export default function MediaKitReelsTable({ reelGrid }) {
   const rows = useMemo(() => buildRankedReelRows(REELS, reelGrid), [reelGrid])
 
   return (

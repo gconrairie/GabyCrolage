@@ -83,3 +83,24 @@ export function buildRankedReelRows(reels, reelGrid) {
 
   return [...rankable, ...loading, ...errors]
 }
+
+/**
+ * Vues du meilleur reel (aligné sur la 1ʳᵉ ligne du tableau après classement) ;
+ * si pas de vues sur cette ligne, max des vues disponibles sur la grille.
+ * Retourne null tant qu’aucune donnée exploitable.
+ */
+export function bestReelViewsForHero(reels, reelGrid) {
+  const rows = buildRankedReelRows(reels, reelGrid)
+  const top = rows.find((r) => !r.loading && !r.error)
+  if (top?.data?.insights && typeof top.data.insights.views === 'number') {
+    return top.data.insights.views
+  }
+  let maxV = null
+  for (const r of reels) {
+    const cell = reelGrid[r.id]
+    if (cell?.loading || cell?.error) continue
+    const v = cell?.data?.insights?.views
+    if (typeof v === 'number' && (maxV === null || v > maxV)) maxV = v
+  }
+  return maxV
+}

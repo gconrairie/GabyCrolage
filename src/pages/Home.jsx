@@ -117,29 +117,6 @@ export default function Home() {
           </Link>
         </nav>
 
-        {/* Reels */}
-        {reels.length > 0 && (
-          <section className="home-reels">
-            <p className="home-section-label">Plus vus</p>
-            <div className="home-reels-grid">
-              {reels.map((reel) => (
-                <a
-                  key={reel.url}
-                  href={reel.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="home-reel-thumb"
-                >
-                  <img src={reel.image} alt={reel.alt} loading="lazy" />
-                  <div className="home-reel-overlay">
-                    <span className="home-reel-overlay-icon">Voir le reel</span>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )}
-
       </main>
 
       {/* Footer */}
