@@ -1,13 +1,15 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
-import MediaKit from './pages/MediaKit'
+import PrivateMediaKit from './pages/PrivateMediaKit'
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/media-kit" element={<MediaKit />} />
+        <Route path="/mk/:token" element={<PrivateMediaKit />} />
+        <Route path="/media-kit" element={<Navigate to="/" replace />} />
+        <Route path="/media-kit/*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )

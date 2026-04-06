@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInstagram, faFacebook, faYoutube, faTiktok } from '@fortawesome/free-brands-svg-icons'
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
-import { faArrowRight, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import './Home.css'
 
 const socialLinks = [
@@ -110,11 +109,6 @@ export default function Home() {
 
           <div className="home-divider" />
 
-          {/* CTA Media Kit */}
-          <Link to="/media-kit" className="home-link home-link--cta">
-            <span className="home-link-label">Media Kit</span>
-            <FontAwesomeIcon icon={faArrowRight} className="home-link-arrow" aria-hidden />
-          </Link>
         </nav>
 
       </main>

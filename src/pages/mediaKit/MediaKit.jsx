@@ -61,6 +61,13 @@ export default function MediaKit() {
 
   useEffect(() => {
     document.title = 'Media Kit — Gaby Crolage'
+    const metaRobots = document.createElement('meta')
+    metaRobots.name = 'robots'
+    metaRobots.content = 'noindex, nofollow, noarchive'
+    document.head.appendChild(metaRobots)
+    return () => {
+      document.head.removeChild(metaRobots)
+    }
   }, [])
 
   return (
