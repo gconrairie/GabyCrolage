@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     sendJson(res, 500, {
       ok: false,
       error:
-        'Variables IG_ACCESS_TOKEN et IG_USER_ID requises (ex. secrets Vercel).',
+        'Variables IG_ACCESS_TOKEN et IG_USER_ID requises.',
     })
     return
   }
