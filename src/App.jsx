@@ -8,6 +8,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/mk/:token" element={<PrivateMediaKit />} />
+        <Route path="/wk/:token" element={<PrivateMediaKit />} />
         <Route path="/media-kit" element={<Navigate to="/" replace />} />
         <Route path="/media-kit/*" element={<Navigate to="/" replace />} />
       </Routes>
