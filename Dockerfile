@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1
 # Build : secret BuildKit id=dotenv → Vite lit /app/.env (pas copié dans l’image).
 #   docker compose build   OU   docker build --secret id=dotenv,src=.env -t gabycrolage:latest .
-# Run :
-#   docker compose up -d   OU   docker run -d --env-file .env -p 8080:3000 … gabycrolage:latest
+# Run (port interne 8080 — Nginx Proxy Manager : http://gabycrolage-web:8080, sans TLS sur le conteneur) :
+#   docker compose up -d   OU   docker run -d --env-file .env … gabycrolage:latest
 
 FROM node:22-alpine AS build
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN --mount=type=secret,id=dotenv,target=/app/.env \
 FROM node:22-alpine
 WORKDIR /app
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=8080
 
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/dist ./dist
@@ -31,5 +31,5 @@ COPY serve-prod.mjs ./serve-prod.mjs
 RUN chown -R node:node /app
 USER node
 
-EXPOSE 3000
+EXPOSE 8080
 CMD ["node", "serve-prod.mjs"]

@@ -1,13 +1,30 @@
+# Nginx Proxy Manager : proxy HTTP vers le conteneur (TLS uniquement côté NPM, port 443 du VPS).
+#   Forward Hostname : gabycrolage-web
+#   Forward Port     : 8080
+#   Scheme           : http  (pas https vers le backend)
+
 services:
   web:
     build:
       context: .
       secrets:
         - dotenv
+    container_name: gabycrolage-web
     env_file: .env
-    ports:
-      - "${WEB_PORT:-8080}:3000"
+    environment:
+      PORT: "8080"
+    networks:
+      - npm_graab
+    # Pas de `ports:` : accès via le réseau Docker (NPM).
+    # Décommenter seulement pour debug local sur la machine hôte :
+    # ports:
+    #   - "127.0.0.1:8080:8080"
     restart: unless-stopped
+
+networks:
+  npm_graab:
+    external: true
+    name: npm-graab
 
 secrets:
   dotenv:
