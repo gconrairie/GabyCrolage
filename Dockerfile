@@ -1,8 +1,7 @@
 # syntax=docker/dockerfile:1
-# Build : secret BuildKit id=dotenv → Vite lit /app/.env (pas copié dans l’image).
-#   docker compose build   OU   docker build --secret id=dotenv,src=.env -t gabycrolage:latest .
-# Run (port interne 8080 — Nginx Proxy Manager : http://gabycrolage-web:8080, sans TLS sur le conteneur) :
-#   docker compose up -d   OU   docker run -d --env-file .env … gabycrolage:latest
+# Build : VITE_MEDIA_KIT_SECRET via build-arg (Compose lit automatiquement le .env pour l’interpolation).
+#   docker compose build --no-cache && docker compose up -d
+# Run : http://gabycrolage-web:8080 derrière NPM — env_file .env pour IG_* (runtime).
 
 FROM node:22-alpine AS build
 WORKDIR /app
@@ -14,8 +13,11 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN --mount=type=secret,id=dotenv,target=/app/.env \
-  pnpm run build
+# Vite prend d’abord process.env pour VITE_* — indispensable si le montage secret BuildKit ne fournit pas .env au build.
+ARG VITE_MEDIA_KIT_SECRET
+ENV VITE_MEDIA_KIT_SECRET=$VITE_MEDIA_KIT_SECRET
+
+RUN pnpm run build
 
 FROM node:22-alpine
 WORKDIR /app

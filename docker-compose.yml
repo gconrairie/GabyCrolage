@@ -2,13 +2,15 @@
 #   Forward Hostname : gabycrolage-web
 #   Forward Port     : 8080
 #   Scheme           : http  (pas https vers le backend)
+#
+# Docker Compose charge le fichier .env à la racine pour interpoler ${VITE_MEDIA_KIT_SECRET} au build.
 
 services:
   web:
     build:
       context: .
-      secrets:
-        - dotenv
+      args:
+        VITE_MEDIA_KIT_SECRET: ${VITE_MEDIA_KIT_SECRET:-}
     container_name: gabycrolage-web
     env_file: .env
     environment:
@@ -25,7 +27,3 @@ networks:
   npm_graab:
     external: true
     name: npm-graab
-
-secrets:
-  dotenv:
-    file: .env
