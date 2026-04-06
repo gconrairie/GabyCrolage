@@ -1,0 +1,14 @@
+services:
+  web:
+    build:
+      context: .
+      secrets:
+        - dotenv
+    env_file: .env
+    ports:
+      - "${WEB_PORT:-8080}:3000"
+    restart: unless-stopped
+
+secrets:
+  dotenv:
+    file: .env

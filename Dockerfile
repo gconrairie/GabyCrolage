@@ -1,4 +1,9 @@
-# Build frontend → servir uniquement les fichiers statiques (nginx alpine).
+# syntax=docker/dockerfile:1
+# Build : secret BuildKit id=dotenv → Vite lit /app/.env (pas copié dans l’image).
+#   docker compose build   OU   docker build --secret id=dotenv,src=.env -t gabycrolage:latest .
+# Run :
+#   docker compose up -d   OU   docker run -d --env-file .env -p 8080:3000 … gabycrolage:latest
+
 FROM node:22-alpine AS build
 WORKDIR /app
 
@@ -9,14 +14,22 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-# Injecté au build (comme avec Vite ailleurs) — obligatoire pour que /mk/<secret> fonctionne.
-ARG VITE_MEDIA_KIT_SECRET
-ENV VITE_MEDIA_KIT_SECRET=$VITE_MEDIA_KIT_SECRET
+RUN --mount=type=secret,id=dotenv,target=/app/.env \
+  pnpm run build
 
-RUN pnpm run build
+FROM node:22-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
 
-FROM nginx:1.27-alpine
-COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/dist ./dist
+COPY lib ./lib
+COPY api ./api
+COPY serve-prod.mjs ./serve-prod.mjs
+
+RUN chown -R node:node /app
+USER node
+
+EXPOSE 3000
+CMD ["node", "serve-prod.mjs"]
