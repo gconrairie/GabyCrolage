@@ -32,6 +32,8 @@ export default function Home() {
   const heroRef   = useRef(null)
   const headerRef = useRef(null)
   const [reels, setReels] = useState([])
+  const imgSizes = '(min-width: 900px) 520px, 92vw'
+  const imgAlt = 'Gabycrolage'
 
   useEffect(() => {
     document.title = 'Gabycrolage'
@@ -65,17 +67,71 @@ export default function Home() {
 
       {/* Hero */}
       <div className="home-hero" ref={heroRef}>
-        <img src="/assets/images/gabycrolage.webp" alt="Gabycrolage" />
+        <picture>
+          <source
+            type="image/avif"
+            srcSet={[
+              '/assets/images/gabycrolage-256w.avif 256w',
+              '/assets/images/gabycrolage-480w.avif 480w',
+              '/assets/images/gabycrolage-512w.avif 512w',
+              '/assets/images/gabycrolage-768w.avif 768w',
+              '/assets/images/gabycrolage-1024w.avif 1024w',
+              '/assets/images/gabycrolage-1280w.avif 1280w',
+            ].join(', ')}
+            sizes={imgSizes}
+          />
+          <source
+            type="image/webp"
+            srcSet={[
+              '/assets/images/gabycrolage-256w.webp 256w',
+              '/assets/images/gabycrolage-480w.webp 480w',
+              '/assets/images/gabycrolage-512w.webp 512w',
+              '/assets/images/gabycrolage-768w.webp 768w',
+              '/assets/images/gabycrolage-1024w.webp 1024w',
+              '/assets/images/gabycrolage-1280w.webp 1280w',
+            ].join(', ')}
+            sizes={imgSizes}
+          />
+          <img
+            src="/assets/images/gabycrolage-768w.webp"
+            alt={imgAlt}
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+          />
+        </picture>
         <div className="home-hero-gradient" />
       </div>
 
       {/* Sticky header */}
       <header className="home-sticky" ref={headerRef}>
-        <img
-          className="home-sticky-avatar"
-          src="/assets/images/gabycrolage.webp"
-          alt=""
-        />
+        <picture>
+          <source
+            type="image/avif"
+            srcSet={[
+              '/assets/images/gabycrolage-256w.avif 256w',
+              '/assets/images/gabycrolage-480w.avif 480w',
+              '/assets/images/gabycrolage-512w.avif 512w',
+            ].join(', ')}
+            sizes="56px"
+          />
+          <source
+            type="image/webp"
+            srcSet={[
+              '/assets/images/gabycrolage-256w.webp 256w',
+              '/assets/images/gabycrolage-480w.webp 480w',
+              '/assets/images/gabycrolage-512w.webp 512w',
+            ].join(', ')}
+            sizes="56px"
+          />
+          <img
+            className="home-sticky-avatar"
+            src="/assets/images/gabycrolage-256w.webp"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
         <div className="home-sticky-info">
           <span className="home-sticky-name">Gabycrolage</span>
           <span className="home-sticky-sub">Content Creator</span>
