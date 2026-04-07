@@ -40,9 +40,12 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  background: #000000;
+  background: var(--bg);
 }
 
 body {
+  background: #000000;
   background: var(--bg);
   color: var(--text);
   font-family: 'Roboto', system-ui, sans-serif;
