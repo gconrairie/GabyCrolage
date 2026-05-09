@@ -2,6 +2,5 @@
 User-agent: *
 Allow: /
 
-# Media kit : accès uniquement par lien privé, ne pas indexer ces préfixes.
-Disallow: /mk/
-Disallow: /wk/
+# Media kit : accessible par lien direct, absent de la page d'accueil.
+Disallow: /media-kit

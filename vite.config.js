@@ -33,13 +33,17 @@ export default defineConfig(({ mode }) => {
               return
             }
             try {
+              const { cachedResult } = await import('./lib/apiCache.js')
               const { fetchProfileSnapshot, fetchReelStats } = await import(
                 './lib/instagramEndpoints.js'
               )
               if (action === 'profile') {
-                const profile = await fetchProfileSnapshot({ token, userId })
+                const { data, cache } = await cachedResult(
+                  { scope: 'instagram', userId, action: 'profile' },
+                  async () => ({ profile: await fetchProfileSnapshot({ token, userId }) }),
+                )
                 res.statusCode = 200
-                res.end(JSON.stringify({ ok: true, profile }))
+                res.end(JSON.stringify({ ok: true, ...data, cache }))
                 return
               }
               if (action === 'reel' || action === 'media') {
@@ -54,20 +58,60 @@ export default defineConfig(({ mode }) => {
                   )
                   return
                 }
-                const data = await fetchReelStats({
-                  token,
-                  userId,
-                  mediaId: mediaInput,
-                })
+                const { data, cache } = await cachedResult(
+                  { scope: 'instagram', userId, action: 'reel', mediaInput },
+                  async () =>
+                    fetchReelStats({
+                      token,
+                      userId,
+                      mediaId: mediaInput,
+                    }),
+                )
                 res.statusCode = 200
-                res.end(JSON.stringify({ ok: true, ...data }))
+                res.end(JSON.stringify({ ok: true, ...data, cache }))
+                return
+              }
+              if (action === 'top-reels' || action === 'topReels') {
+                const { fetchTopReels } = await import(
+                  './lib/instagramEndpoints.js'
+                )
+                const limit = Math.min(10, Math.max(1, Number(url.searchParams.get('limit') || 5) || 5))
+                const scanLimit = Math.min(200, Math.max(limit, Number(url.searchParams.get('scanLimit') || 100) || 100))
+                const { data, cache } = await cachedResult(
+                  { scope: 'instagram', userId, action: 'top-reels', limit, scanLimit },
+                  async () => ({
+                    reels: await fetchTopReels({ token, userId, limit, scanLimit }),
+                    note:
+                      'Instagram Graph ne fournit pas un classement global direct : classement calculé depuis les reels accessibles via /media sur la profondeur scanLimit.',
+                  }),
+                )
+                res.statusCode = 200
+                res.end(
+                  JSON.stringify({
+                    ok: true,
+                    ...data,
+                    cache,
+                  }),
+                )
+                return
+              }
+              if (action === 'insights' || action === 'raw') {
+                const { fetchInstagramGraphRaw } = await import(
+                  './lib/instagramGraphRaw.js'
+                )
+                const { data, cache } = await cachedResult(
+                  { scope: 'instagram', userId, action: 'insights' },
+                  async () => fetchInstagramGraphRaw({ token, userId }),
+                )
+                res.statusCode = 200
+                res.end(JSON.stringify({ ok: true, ...data, cache }))
                 return
               }
               res.statusCode = 400
               res.end(
                 JSON.stringify({
                   ok: false,
-                  error: 'action invalide (profile | reel).',
+                  error: 'action invalide (profile | reel | insights | top-reels).',
                 }),
               )
             } catch (e) {

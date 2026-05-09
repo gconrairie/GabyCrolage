@@ -1,26 +1,34 @@
-import { useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import SectionHead from './SectionHead'
-import { REELS } from './data'
-import { buildRankedReelRows, formatReelMediaMeta, reelDisplayHeadline } from './utils'
+import { formatReelMediaMeta, reelDisplayHeadline } from './utils'
 import { formatCompactMetric } from './numberFormat'
 import ReelEngagementMetrics from './ReelEngagementMetrics'
+import MetricSpinner from './MetricSpinner'
 
 /** Colonnes : contenu | vues | engagement — aligné sur les variables .mkit */
 const reelGridCols =
   'grid grid-cols-[1fr_6rem] sm:grid-cols-[1fr_6rem_16rem] items-start gap-x-3 '
 
-export default function MediaKitReelsTable({ reelGrid }) {
-  const rows = useMemo(() => buildRankedReelRows(REELS, reelGrid), [reelGrid])
+export default function MediaKitReelsTable({ reels = [], loading, error, note }) {
+  const rows = loading
+    ? Array.from({ length: 5 }, (_, index) => ({
+        loading: true,
+        resolvedMediaId: `loading-${index}`,
+        media: null,
+        insights: null,
+      }))
+    : reels
 
   return (
     <section className="mkit-sec" aria-labelledby="sec-reels">
       <SectionHead
         n="03"
         title="Contenus viraux"
-        subtitle="Classement par vues (lifetime) — données Instagram Graph"
+        subtitle="Top 5 calculé par vues sur les reels accessibles via Instagram Graph"
       />
+      {note ? <p className="mkit-api-note">{note}</p> : null}
+      {error ? <p className="mkit-api-note mkit-api-note--warn">{error}</p> : null}
       <div className="-mx-2 overflow-x-auto px-2 sm:mx-0 sm:px-0">
         <div
           id="sec-reels"
@@ -53,31 +61,32 @@ export default function MediaKitReelsTable({ reelGrid }) {
           </div>
 
           {rows.map((row, index) => {
-            const { configTitle, loading, error, data } = row
-            const media = data?.media
-            const insights = data?.insights
+            const media = row.media
+            const insights = row.insights
             const permalink = media?.permalink
-            const headline = reelDisplayHeadline(media?.caption, configTitle)
+            const headline = row.loading
+              ? 'Chargement du reel'
+              : reelDisplayHeadline(media?.caption, 'Reel Instagram')
             const metaLine = formatReelMediaMeta(media)
 
-            const isTopRanked = index === 0 && !loading && !error
+            const isTopRanked = index === 0 && !row.loading && !error
             const isLast = index === rows.length - 1
 
             let viewsCell = <span className="mkit-table__na">—</span>
-            if (loading) {
-              viewsCell = <span className="mkit-table__pending">…</span>
+            if (row.loading) {
+              viewsCell = <MetricSpinner label="Chargement vues reel" />
             } else if (typeof insights?.views === 'number') {
               viewsCell = formatCompactMetric(insights.views)
             }
 
             let engCell = <ReelEngagementMetrics insights={insights} />
-            if (loading) {
-              engCell = <span className="mkit-table__pending">…</span>
+            if (row.loading) {
+              engCell = <MetricSpinner label="Chargement engagement reel" />
             }
 
             return (
               <div
-                key={row.configId}
+                key={row.resolvedMediaId || row.media?.id || index}
                 role="row"
                 className={[
                   reelGridCols,
@@ -89,7 +98,7 @@ export default function MediaKitReelsTable({ reelGrid }) {
                 ]
                   .filter(Boolean)
                   .join(' ')}
-                title={error || undefined}
+                title={row.error || undefined}
               >
                 <div role="cell">
                   <span className="">
@@ -112,9 +121,9 @@ export default function MediaKitReelsTable({ reelGrid }) {
                     )}
                   </span>
                   {metaLine ? <span className="mkit-table__meta">{metaLine}</span> : null}
-                  {error ? (
+                  {row.error ? (
                     <span className="mkit-table__api-err" role="status">
-                      {error}
+                      {row.error}
                     </span>
                   ) : null}
                 </div>
@@ -133,6 +142,13 @@ export default function MediaKitReelsTable({ reelGrid }) {
               </div>
             )
           })}
+          {!loading && !error && rows.length === 0 ? (
+            <div role="row" className={`${reelGridCols} border-b-0 p-4`}>
+              <div className="mkit-table__na" role="cell">
+                Aucun reel classable renvoyé par l’API.
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

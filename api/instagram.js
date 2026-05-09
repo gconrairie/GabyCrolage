@@ -2,7 +2,10 @@ import { URL } from 'node:url'
 import {
   fetchProfileSnapshot,
   fetchReelStats,
+  fetchTopReels,
 } from '../lib/instagramEndpoints.js'
+import { fetchInstagramGraphRaw } from '../lib/instagramGraphRaw.js'
+import { cachedResult } from '../lib/apiCache.js'
 
 function readQuery(req) {
   if (req.query && Object.keys(req.query).length) return req.query
@@ -49,8 +52,11 @@ export default async function handler(req, res) {
 
   try {
     if (action === 'profile') {
-      const profile = await fetchProfileSnapshot({ token, userId })
-      sendJson(res, 200, { ok: true, profile })
+      const { data, cache } = await cachedResult(
+        { scope: 'instagram', userId, action: 'profile' },
+        async () => ({ profile: await fetchProfileSnapshot({ token, userId }) }),
+      )
+      sendJson(res, 200, { ok: true, ...data, cache })
       return
     }
 
@@ -63,18 +69,50 @@ export default async function handler(req, res) {
         })
         return
       }
-      const data = await fetchReelStats({
-        token,
-        userId,
-        mediaId: mediaInput,
+      const { data, cache } = await cachedResult(
+        { scope: 'instagram', userId, action: 'reel', mediaInput },
+        async () =>
+          fetchReelStats({
+            token,
+            userId,
+            mediaId: mediaInput,
+          }),
+      )
+      sendJson(res, 200, { ok: true, ...data, cache })
+      return
+    }
+
+    if (action === 'insights' || action === 'raw') {
+      const { data, cache } = await cachedResult(
+        { scope: 'instagram', userId, action: 'insights' },
+        async () => fetchInstagramGraphRaw({ token, userId }),
+      )
+      sendJson(res, 200, { ok: true, ...data, cache })
+      return
+    }
+
+    if (action === 'top-reels' || action === 'topReels') {
+      const limit = Math.min(10, Math.max(1, Number(q.limit || 5) || 5))
+      const scanLimit = Math.min(200, Math.max(limit, Number(q.scanLimit || 100) || 100))
+      const { data, cache } = await cachedResult(
+        { scope: 'instagram', userId, action: 'top-reels', limit, scanLimit },
+        async () => ({
+          reels: await fetchTopReels({ token, userId, limit, scanLimit }),
+          note:
+            'Instagram Graph ne fournit pas un classement global direct : classement calculé depuis les reels accessibles via /media sur la profondeur scanLimit.',
+        }),
+      )
+      sendJson(res, 200, {
+        ok: true,
+        ...data,
+        cache,
       })
-      sendJson(res, 200, { ok: true, ...data })
       return
     }
 
     sendJson(res, 400, {
       ok: false,
-      error: 'action inconnue. Utiliser profile ou reel&mediaId=…',
+      error: 'action inconnue. Utiliser profile, reel&mediaId=…, insights ou top-reels',
     })
   } catch (e) {
     sendJson(res, 500, {

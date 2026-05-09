@@ -11,6 +11,29 @@ export function formatMediaKitDate(iso) {
   })
 }
 
+/** Formate un horodatage API ISO en date + heure françaises. */
+export function formatMediaKitDateTime(iso) {
+  if (!iso) return { date: '', time: '', label: '' }
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return { date: '', time: '', label: '' }
+
+  const date = d.toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+  const time = d.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
+  return {
+    date,
+    time,
+    label: `${date} · ${time}`,
+  }
+}
+
 /** Score pour tri décroissant : meilleur reel en premier (vues > interactions totales > likes). */
 export function reelRankScore(insights) {
   if (!insights || typeof insights !== 'object') return null

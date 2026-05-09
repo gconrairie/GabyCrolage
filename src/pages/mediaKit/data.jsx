@@ -78,10 +78,6 @@ export const REELS = [
     id: 'DPUBC_RDI4k',
   },
   {
-    title: 'Slap !',
-    id: 'DTm7SEsDMGN',
-  },
-  {
     title: 'Le dictateur',
     id: 'DNFcLonM-5R',
   },

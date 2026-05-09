@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# Build : VITE_MEDIA_KIT_SECRET via build-arg (Compose lit automatiquement le .env pour l’interpolation).
+# Build :
 #   docker compose build --no-cache && docker compose up -d
 # Run : http://gabycrolage-web:8080 derrière NPM — env_file .env pour IG_* (runtime).
 
@@ -12,10 +12,6 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-
-# Vite prend d’abord process.env pour VITE_* — indispensable si le montage secret BuildKit ne fournit pas .env au build.
-ARG VITE_MEDIA_KIT_SECRET
-ENV VITE_MEDIA_KIT_SECRET=$VITE_MEDIA_KIT_SECRET
 
 RUN pnpm run build
 

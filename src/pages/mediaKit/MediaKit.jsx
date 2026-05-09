@@ -3,61 +3,105 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import '../MediaKit.css'
-import { MEDIA_KIT, AGE_BARS, CITIES, OFFERS, REELS } from './data'
-import { formatMediaKitDate, bestReelViewsForHero } from './utils'
+import { MEDIA_KIT } from './data'
+import { formatMediaKitDateTime } from './utils'
 import { formatCompactMetric } from './numberFormat'
-import { useInstagramProfile } from './hooks/useInstagramProfile'
-import { useReelGridMetrics } from './hooks/useReelGridMetrics'
+import { useInstagramInsights } from './hooks/useInstagramInsights'
+import { useTopInstagramReels } from './hooks/useTopInstagramReels'
+import MetricSpinner from './MetricSpinner'
 import MediaKitCover from './MediaKitCover'
 import MediaKitProfile from './MediaKitProfile'
 import MediaKitPerformances from './MediaKitPerformances'
 import MediaKitReelsTable from './MediaKitReelsTable'
 import MediaKitAudience from './MediaKitAudience'
-import MediaKitOffers from './MediaKitOffers'
 import MediaKitContact from './MediaKitContact'
 import MediaKitFooter from './MediaKitFooter'
 
 export default function MediaKit() {
   const h = MEDIA_KIT.hero
-  const perf = MEDIA_KIT.performances
-  const aud = MEDIA_KIT.audience
   const c = MEDIA_KIT.contact
-  const kitUpdatedLabel = formatMediaKitDate(MEDIA_KIT.meta?.lastUpdated)
-  const metaLastUpdated = MEDIA_KIT.meta.lastUpdated
 
-  const { followersCount, profileErr } = useInstagramProfile()
-  const reelGrid = useReelGridMetrics(REELS)
+  const insights = useInstagramInsights()
+  const topReels = useTopInstagramReels()
+  const refreshedAt = insights.data?.cache?.cachedAt || insights.data?.fetchedAt || ''
+  const kitUpdated = formatMediaKitDateTime(refreshedAt)
 
   const followersFormatted = useMemo(() => {
-    if (followersCount == null) return null
-    return formatCompactMetric(followersCount)
-  }, [followersCount])
+    if (typeof insights.profile?.followers_count !== 'number') return null
+    return formatCompactMetric(insights.profile.followers_count)
+  }, [insights.profile])
 
   const bestReelFormatted = useMemo(() => {
-    const views = bestReelViewsForHero(REELS, reelGrid)
-    if (views == null) return null
-    return formatCompactMetric(views)
-  }, [reelGrid])
+    const views = topReels.reels?.[0]?.insights?.views
+    return typeof views === 'number' ? formatCompactMetric(views) : null
+  }, [topReels.reels])
 
   const heroStats = useMemo(() => {
     return h.stats.map((s) => {
-      if (s.label === 'Abonnés' && followersFormatted) {
-        return { ...s, value: followersFormatted }
+      if (s.label === 'Abonnés') {
+        return { ...s, value: followersFormatted || <MetricSpinner label="Chargement abonnés" /> }
       }
-      if (s.label === 'Best reel' && bestReelFormatted) {
-        return { ...s, value: bestReelFormatted }
+      if (s.label === 'Vues / 30 jours') {
+        const views = insights.metrics30d.views
+        return {
+          ...s,
+          value:
+            typeof views === 'number' ? (
+              formatCompactMetric(views)
+            ) : (
+              <MetricSpinner label="Chargement vues 30 jours" />
+            ),
+        }
       }
-      return s
+      if (s.label === 'Best reel') {
+        return { ...s, value: bestReelFormatted || <MetricSpinner label="Chargement best reel" /> }
+      }
+      return { ...s, value: <MetricSpinner /> }
     })
-  }, [h.stats, followersFormatted, bestReelFormatted])
+  }, [h.stats, followersFormatted, insights.metrics30d.views, bestReelFormatted])
 
   const perfCells = useMemo(() => {
-    return perf.cells.map((cell) => ({
-      ...cell,
-      value:
-        cell.label === 'Abonnés' && followersFormatted ? followersFormatted : cell.value,
-    }))
-  }, [perf.cells, followersFormatted])
+    const metric = (key) =>
+      typeof insights.metrics30d[key] === 'number' ? (
+        formatCompactMetric(insights.metrics30d[key])
+      ) : (
+        <MetricSpinner label={`Chargement ${key}`} />
+      )
+
+    return [
+      {
+        featured: true,
+        value: metric('views'),
+        label: 'Vues totales · 30 derniers jours',
+        sub: 'Instagram Graph · metric=views',
+      },
+      {
+        value: metric('reach'),
+        label: 'Comptes touchés',
+        sub: 'Instagram Graph · metric=reach',
+      },
+      {
+        value: metric('accounts_engaged'),
+        label: 'Comptes engagés',
+        sub: 'Instagram Graph · metric=accounts_engaged',
+      },
+      {
+        value: metric('total_interactions'),
+        label: 'Interactions',
+        sub: 'Likes, commentaires, partages, enregistrements',
+      },
+      {
+        value: metric('profile_views'),
+        label: 'Vues du profil',
+        sub: 'Instagram Graph · metric=profile_views',
+      },
+      {
+        value: followersFormatted || <MetricSpinner label="Chargement abonnés" />,
+        label: 'Abonnés',
+        sub: 'Champ profil · followers_count',
+      },
+    ]
+  }, [insights.metrics30d, followersFormatted])
 
   useEffect(() => {
     document.title = 'Media Kit — Gaby Crolage'
@@ -85,9 +129,9 @@ export default function MediaKit() {
         </nav>
         <MediaKitCover
           hero={h}
-          metaLastUpdated={metaLastUpdated}
-          kitUpdatedLabel={kitUpdatedLabel}
-          profileErr={profileErr}
+          metaLastUpdated={refreshedAt}
+          kitUpdatedLabel={kitUpdated.label}
+          profileErr={insights.error}
           heroStats={heroStats}
           followersFormatted={followersFormatted}
         />
@@ -95,13 +139,21 @@ export default function MediaKit() {
         <main className="mkit-main" id="mkit-main">
           <MediaKitProfile />
           <MediaKitPerformances perfCells={perfCells} />
-          <MediaKitReelsTable reelGrid={reelGrid} />
-          <MediaKitAudience audience={aud} ageBars={AGE_BARS} cities={CITIES} />
-          <MediaKitOffers offers={OFFERS} />
+          <MediaKitReelsTable
+            reels={topReels.reels}
+            loading={topReels.loading}
+            error={topReels.error}
+            note={topReels.note}
+          />
+          <MediaKitAudience
+            audience={insights.audience}
+            loading={insights.loading}
+            error={insights.error}
+          />
           <MediaKitContact contact={c} />
         </main>
 
-        <MediaKitFooter year={h.year} metaLastUpdated={metaLastUpdated} kitUpdatedLabel={kitUpdatedLabel} />
+        <MediaKitFooter year={h.year} metaLastUpdated={refreshedAt} kitUpdatedLabel={kitUpdated.label} />
       </div>
     </div>
   )
