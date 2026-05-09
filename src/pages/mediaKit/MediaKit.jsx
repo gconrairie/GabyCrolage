@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faFilePdf } from '@fortawesome/free-solid-svg-icons'
 import '../MediaKit.css'
 import { MEDIA_KIT } from './data'
 import { formatMediaKitDateTime } from './utils'
@@ -114,6 +114,10 @@ export default function MediaKit() {
     }
   }, [])
 
+  const handlePdfExport = () => {
+    window.print()
+  }
+
   return (
     <div className="mkit">
       <a href="#mkit-main" className="mkit-skip">
@@ -151,9 +155,19 @@ export default function MediaKit() {
             error={insights.error}
           />
           <MediaKitContact contact={c} />
+
+          <div className="mkit-export" aria-label="Export du média kit">
+            <button type="button" className="mkit-export__btn" onClick={handlePdfExport}>
+              <FontAwesomeIcon icon={faFilePdf} className="mkit-export__icon" aria-hidden />
+              <span>Exporter en PDF</span>
+            </button>
+          </div>
+
         </main>
 
+
         <MediaKitFooter year={h.year} metaLastUpdated={refreshedAt} kitUpdatedLabel={kitUpdated.label} />
+
       </div>
     </div>
   )
