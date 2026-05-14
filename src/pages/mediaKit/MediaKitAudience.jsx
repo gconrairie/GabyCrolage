@@ -2,9 +2,9 @@ import SectionHead from './SectionHead'
 import { formatPercent2 } from './numberFormat'
 import MetricSpinner from './MetricSpinner'
 
-function BarList({ rows }) {
+function BarList({ rows, copy, locale }) {
   if (!rows?.length) {
-    return <p className="mkit-table__na">Données indisponibles.</p>
+    return <p className="mkit-table__na">{copy.unavailable}</p>
   }
 
   return (
@@ -18,16 +18,16 @@ function BarList({ rows }) {
               style={{ width: bar.width, animationDelay: `${index * 0.08}s` }}
             />
           </span>
-          <span className="mkit-bar__pct">{formatPercent2(bar.pct)}%</span>
+          <span className="mkit-bar__pct">{formatPercent2(bar.pct, locale)}%</span>
         </li>
       ))}
     </ul>
   )
 }
 
-function RankedList({ rows }) {
+function RankedList({ rows, copy, locale }) {
   if (!rows?.length) {
-    return <p className="mkit-table__na">Données indisponibles.</p>
+    return <p className="mkit-table__na">{copy.unavailable}</p>
   }
 
   return (
@@ -36,7 +36,7 @@ function RankedList({ rows }) {
         <li key={row.label}>
           <span>{row.label}</span>
           <span>
-            {formatPercent2(row.pct)}% · {row.value.toLocaleString('fr-FR')}
+            {formatPercent2(row.pct, locale)}% · {row.value.toLocaleString(locale)}
           </span>
         </li>
       ))}
@@ -44,48 +44,50 @@ function RankedList({ rows }) {
   )
 }
 
-export default function MediaKitAudience({ audience, loading, error }) {
+export default function MediaKitAudience({ audience, loading, error, copy, locale }) {
+  const { section } = copy
+
   return (
     <section className="mkit-sec mkit-sec--audience" aria-labelledby="sec-audience">
-      <SectionHead n="05" title="Audience" subtitle="Démographie & géographie" />
+      <SectionHead n={section.number} title={section.title} subtitle={section.subtitle} />
       {error ? <p className="mkit-api-note mkit-api-note--warn">{error}</p> : null}
       <div className="mkit-aud-grid" id="sec-audience">
         <div className="mkit-aud-card">
-          <h3 className="mkit-aud-h">Répartition par âge</h3>
-          {loading ? <MetricSpinner label="Chargement audience âge" /> : <BarList rows={audience.age} />}
-          <h3 className="mkit-aud-h mkit-aud-h--sp">Répartition par genre</h3>
+          <h3 className="mkit-aud-h">{copy.ageTitle}</h3>
+          {loading ? <MetricSpinner label={copy.loading.age} /> : <BarList rows={audience.age} copy={copy} locale={locale} />}
+          <h3 className="mkit-aud-h mkit-aud-h--sp">{copy.genderTitle}</h3>
           <div className="mkit-gender">
             <div className="mkit-gender__cell">
               <span className="mkit-gender__pct">
                 {loading ? (
-                  <MetricSpinner label="Chargement audience hommes" />
+                  <MetricSpinner label={copy.loading.men} />
                 ) : (
-                  `${formatPercent2(audience.gender.find((row) => row.label === 'M')?.pct)}%`
+                  `${formatPercent2(audience.gender.find((row) => row.label === 'M')?.pct, locale)}%`
                 )}
               </span>
-              <span className="mkit-gender__lbl">Hommes</span>
+              <span className="mkit-gender__lbl">{copy.men}</span>
             </div>
             <div className="mkit-gender__cell">
               <span className="mkit-gender__pct">
                 {loading ? (
-                  <MetricSpinner label="Chargement audience femmes" />
+                  <MetricSpinner label={copy.loading.women} />
                 ) : (
-                  `${formatPercent2(audience.gender.find((row) => row.label === 'F')?.pct)}%`
+                  `${formatPercent2(audience.gender.find((row) => row.label === 'F')?.pct, locale)}%`
                 )}
               </span>
-              <span className="mkit-gender__lbl">Femmes</span>
+              <span className="mkit-gender__lbl">{copy.women}</span>
             </div>
           </div>
         </div>
         <div className="mkit-aud-card">
-          <h3 className="mkit-aud-h">Villes principales en France</h3>
-          {loading ? <MetricSpinner label="Chargement villes" /> : <RankedList rows={audience.cities} />}
-          <h3 className="mkit-aud-h mkit-aud-h--sp">Pays principaux</h3>
-          {loading ? <MetricSpinner label="Chargement pays" /> : <RankedList rows={audience.countries} />}
+          <h3 className="mkit-aud-h">{copy.citiesTitle}</h3>
+          {loading ? <MetricSpinner label={copy.loading.cities} /> : <RankedList rows={audience.cities} copy={copy} locale={locale} />}
+          <h3 className="mkit-aud-h mkit-aud-h--sp">{copy.countriesTitle}</h3>
+          {loading ? <MetricSpinner label={copy.loading.countries} /> : <RankedList rows={audience.countries} copy={copy} locale={locale} />}
           <blockquote className="mkit-quote">
-            <cite className="mkit-quote__src">Insight clé</cite>
+            <cite className="mkit-quote__src">{copy.insightTitle}</cite>
             <p className="mkit-quote__txt">
-              {loading ? <MetricSpinner label="Chargement insight audience" /> : audience.insight}
+              {loading ? <MetricSpinner label={copy.loading.insight} /> : audience.insight}
             </p>
           </blockquote>
         </div>

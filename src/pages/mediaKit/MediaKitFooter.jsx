@@ -1,11 +1,11 @@
-export default function MediaKitFooter({ year, metaLastUpdated, kitUpdatedLabel }) {
+export default function MediaKitFooter({ year, metaLastUpdated, kitUpdatedLabel, copy }) {
   return (
     <footer className="mkit-foot">
       <p>© Gaby Crolage · {year}</p>
-      <p>Media Kit — usage professionnel</p>
+      <p>{copy.usage}</p>
       {kitUpdatedLabel ? (
         <p className="mkit-foot__updated">
-          Dernière mise à jour du document :{' '}
+          {copy.updatedPrefix}{' '}
           <time dateTime={metaLastUpdated}>{kitUpdatedLabel}</time>
         </p>
       ) : null}

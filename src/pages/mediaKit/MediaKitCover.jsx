@@ -4,7 +4,6 @@ export default function MediaKitCover({
   kitUpdatedLabel,
   profileErr,
   heroStats,
-  followersFormatted,
 }) {
   return (
     <header className="mkit-cover" id="top">
@@ -15,7 +14,7 @@ export default function MediaKitCover({
         </div>
         {kitUpdatedLabel ? (
           <p className="mkit-cover__updated">
-            Mis à jour le <time dateTime={metaLastUpdated}>{kitUpdatedLabel}</time>
+            {hero.updatedPrefix} <time dateTime={metaLastUpdated}>{kitUpdatedLabel}</time>
           </p>
         ) : null}
       </div>
@@ -34,7 +33,7 @@ export default function MediaKitCover({
           </ul>
         </div>
 
-        <aside className="mkit-cover__aside" aria-label="Indicateurs clés">
+        <aside className="mkit-cover__aside" aria-label={hero.kpiAriaLabel}>
           {profileErr ? <p className="mkit-api-note mkit-api-note--warn">{profileErr}</p> : null}
           <ul className="mkit-kpi">
             {heroStats.map((s) => (

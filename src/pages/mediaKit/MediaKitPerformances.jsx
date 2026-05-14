@@ -1,9 +1,11 @@
 import SectionHead from './SectionHead'
 
-export default function MediaKitPerformances({ perfCells }) {
+export default function MediaKitPerformances({ perfCells, copy }) {
+  const { section } = copy
+
   return (
     <section className="mkit-sec" aria-labelledby="sec-perf">
-      <SectionHead n="02" title="Performances" subtitle="Synthèse sur la période de référence" />
+      <SectionHead n={section.number} title={section.title} subtitle={section.subtitle} />
       <ul className="mkit-metrics" id="sec-perf">
         {perfCells.map((cell) => (
           <li

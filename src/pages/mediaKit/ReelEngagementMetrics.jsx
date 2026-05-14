@@ -15,7 +15,7 @@ const METRICS = [
   { key: 'saved', icon: faBookmark },
 ]
 
-export default function ReelEngagementMetrics({ insights }) {
+export default function ReelEngagementMetrics({ insights, locale }) {
   if (!insights || typeof insights !== 'object') {
     return <span className="mkit-table__na">—</span>
   }
@@ -27,7 +27,7 @@ export default function ReelEngagementMetrics({ insights }) {
       parts.push(
         <span key={key} className="mkit-metric-inline">
           <FontAwesomeIcon icon={icon} className="mkit-fa-metric" aria-hidden />
-          <span>{formatCompactMetric(v)}</span>
+          <span>{formatCompactMetric(v, locale)}</span>
         </span>,
       )
     }

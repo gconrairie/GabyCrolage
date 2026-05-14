@@ -1,28 +1,28 @@
-/** Formate une date YYYY-MM-DD en libellé français (sans décalage fuseau). */
-export function formatMediaKitDate(iso) {
+/** Formate une date YYYY-MM-DD en libellé localisé (sans décalage fuseau). */
+export function formatMediaKitDate(iso, locale = 'fr-FR') {
   if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(String(iso))) return iso || ''
   const [y, mo, d] = String(iso)
     .split('-')
     .map((n) => parseInt(n, 10))
-  return new Date(y, mo - 1, d).toLocaleDateString('fr-FR', {
+  return new Date(y, mo - 1, d).toLocaleDateString(locale, {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   })
 }
 
-/** Formate un horodatage API ISO en date + heure françaises. */
-export function formatMediaKitDateTime(iso) {
+/** Formate un horodatage API ISO en date + heure localisées. */
+export function formatMediaKitDateTime(iso, locale = 'fr-FR') {
   if (!iso) return { date: '', time: '', label: '' }
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return { date: '', time: '', label: '' }
 
-  const date = d.toLocaleDateString('fr-FR', {
+  const date = d.toLocaleDateString(locale, {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   })
-  const time = d.toLocaleTimeString('fr-FR', {
+  const time = d.toLocaleTimeString(locale, {
     hour: '2-digit',
     minute: '2-digit',
   })
@@ -51,11 +51,11 @@ export function reelDisplayHeadline(caption, titleFallback, maxLen = 72) {
 }
 
 /** Sous-titre : type produit + date de publication (API). */
-export function formatReelMediaMeta(media) {
+export function formatReelMediaMeta(media, locale = 'fr-FR') {
   if (!media?.timestamp) return null
   const d = new Date(media.timestamp)
   if (Number.isNaN(d.getTime())) return null
-  const dateStr = d.toLocaleDateString('fr-FR', {
+  const dateStr = d.toLocaleDateString(locale, {
     day: 'numeric',
     month: 'long',
     year: 'numeric',

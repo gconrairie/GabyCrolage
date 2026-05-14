@@ -1,0 +1,282 @@
+{
+  "fr": {
+    "documentTitle": "Media Kit — Gaby Crolage",
+    "nav": {
+      "ariaLabel": "Navigation",
+      "home": "Accueil",
+      "languageLabel": "Changer la langue du média kit",
+      "languageTitle": "Langue"
+    },
+    "skipLink": "Aller au contenu",
+    "loading": {
+      "followers": "Chargement abonnés",
+      "views30d": "Chargement vues 30 jours",
+      "bestReel": "Chargement best reel",
+      "metric": "Chargement",
+      "reel": "Chargement du reel",
+      "reelViews": "Chargement vues reel",
+      "reelEngagement": "Chargement engagement reel",
+      "audienceAge": "Chargement audience âge",
+      "audienceMen": "Chargement audience hommes",
+      "audienceWomen": "Chargement audience femmes",
+      "cities": "Chargement villes",
+      "countries": "Chargement pays",
+      "audienceInsight": "Chargement insight audience"
+    },
+    "hero": {
+      "tag": "Media Kit",
+      "year": "2026",
+      "eyebrow": "Instagram · Humour · Contenu viral",
+      "nameLine1": "Gaby",
+      "nameLine2": "Crolage",
+      "roles": ["Comédien", "Humoriste", "Créateur"],
+      "updatedPrefix": "Mis à jour le",
+      "stats": [
+        { "key": "followers", "value": "10,2K", "label": "Abonnés" },
+        { "key": "views30d", "value": "683K", "label": "Vues / 30 jours" },
+        { "key": "bestReel", "value": "4,5M", "label": "Best reel" }
+      ],
+      "kpiAriaLabel": "Indicateurs clés"
+    },
+    "profile": {
+      "section": {
+        "number": "01",
+        "title": "Profil",
+        "subtitle": "Positionnement & ligne éditoriale"
+      },
+      "tagline": {
+        "before": "Comédien, ",
+        "emphasis": "humoriste",
+        "after": " & créateur."
+      },
+      "bio": [
+        { "text": "Je suis Gaby Crolage, comédien et humoriste basé en France. Sur Instagram, je partage des " },
+        { "text": "reels humoristiques inspirés du quotidien", "strong": true },
+        { "text": ", avec un regard décalé et accessible. Mon contenu aborde des situations simples et universelles qui parlent facilement au public et suscitent régulièrement de belles interactions. Certains reels ont atteint " },
+        { "text": "plusieurs millions de vues", "strong": true },
+        { "text": " et sont majoritairement diffusés en dehors de ma communauté, ce qui me permet de toucher une audience large de manière naturelle." }
+      ]
+    },
+    "performances": {
+      "section": {
+        "number": "02",
+        "title": "Performances",
+        "subtitle": "Synthèse sur la période de référence"
+      },
+      "metrics": {
+        "views": {
+          "label": "Vues totales · 30 derniers jours",
+          "sub": "Instagram Graph · metric=views"
+        },
+        "reach": {
+          "label": "Comptes touchés",
+          "sub": "Instagram Graph · metric=reach"
+        },
+        "accounts_engaged": {
+          "label": "Comptes engagés",
+          "sub": "Instagram Graph · metric=accounts_engaged"
+        },
+        "total_interactions": {
+          "label": "Interactions",
+          "sub": "Likes, commentaires, partages, enregistrements"
+        },
+        "profile_views": {
+          "label": "Vues du profil",
+          "sub": "Instagram Graph · metric=profile_views"
+        },
+        "followers": {
+          "label": "Abonnés",
+          "sub": "Champ profil · followers_count"
+        }
+      }
+    },
+    "reels": {
+      "section": {
+        "number": "03",
+        "title": "Contenus viraux",
+        "subtitle": "Top 5 calculé par vues sur les reels accessibles via Instagram Graph"
+      },
+      "tableAriaLabel": "Reels classés par nombre de vues (lifetime)",
+      "columns": {
+        "content": "Contenu",
+        "views": "Vues",
+        "engagement": "Engagement"
+      },
+      "apiNote": "Instagram Graph ne fournit pas un classement global direct : classement calculé depuis les reels accessibles via /media sur la profondeur scanLimit.",
+      "fallbackTitle": "Reel Instagram",
+      "empty": "Aucun reel classable renvoyé par l’API."
+    },
+    "audience": {
+      "section": {
+        "number": "05",
+        "title": "Audience",
+        "subtitle": "Démographie & géographie"
+      },
+      "unavailable": "Données indisponibles.",
+      "ageTitle": "Répartition par âge",
+      "genderTitle": "Répartition par genre",
+      "men": "Hommes",
+      "women": "Femmes",
+      "citiesTitle": "Villes principales en France",
+      "countriesTitle": "Pays principaux",
+      "insightTitle": "Insight clé"
+    },
+    "contact": {
+      "section": {
+        "number": "07",
+        "title": "Contact",
+        "subtitle": "Échanges & briefs"
+      },
+      "emailLabel": "Email",
+      "instagramLabel": "Instagram"
+    },
+    "export": {
+      "ariaLabel": "Export du média kit",
+      "button": "Exporter en PDF"
+    },
+    "footer": {
+      "usage": "Media Kit — usage professionnel",
+      "updatedPrefix": "Dernière mise à jour du document :"
+    }
+  },
+  "en": {
+    "documentTitle": "Media Kit — Gaby Crolage",
+    "nav": {
+      "ariaLabel": "Navigation",
+      "home": "Home",
+      "languageLabel": "Change media kit language",
+      "languageTitle": "Language"
+    },
+    "skipLink": "Skip to content",
+    "loading": {
+      "followers": "Loading followers",
+      "views30d": "Loading 30-day views",
+      "bestReel": "Loading best reel",
+      "metric": "Loading",
+      "reel": "Loading reel",
+      "reelViews": "Loading reel views",
+      "reelEngagement": "Loading reel engagement",
+      "audienceAge": "Loading age audience",
+      "audienceMen": "Loading male audience",
+      "audienceWomen": "Loading female audience",
+      "cities": "Loading cities",
+      "countries": "Loading countries",
+      "audienceInsight": "Loading audience insight"
+    },
+    "hero": {
+      "tag": "Media Kit",
+      "year": "2026",
+      "eyebrow": "Instagram · Comedy · Viral content",
+      "nameLine1": "Gaby",
+      "nameLine2": "Crolage",
+      "roles": ["Actor", "Comedian", "Creator"],
+      "updatedPrefix": "Updated on",
+      "stats": [
+        { "key": "followers", "value": "10.2K", "label": "Followers" },
+        { "key": "views30d", "value": "683K", "label": "Views / 30 days" },
+        { "key": "bestReel", "value": "4.5M", "label": "Best reel" }
+      ],
+      "kpiAriaLabel": "Key indicators"
+    },
+    "profile": {
+      "section": {
+        "number": "01",
+        "title": "Profile",
+        "subtitle": "Positioning & editorial direction"
+      },
+      "tagline": {
+        "before": "Actor, ",
+        "emphasis": "comedian",
+        "after": " & creator."
+      },
+      "bio": [
+        { "text": "I am Gaby Crolage, an actor and comedian based in France. On Instagram, I share " },
+        { "text": "comedy reels inspired by everyday life", "strong": true },
+        { "text": ", with an offbeat and accessible point of view. My content focuses on simple, universal situations that resonate quickly with viewers and regularly drive strong interactions. Some reels have reached " },
+        { "text": "several million views", "strong": true },
+        { "text": " and are mostly distributed beyond my own community, allowing me to reach a broad audience organically." }
+      ]
+    },
+    "performances": {
+      "section": {
+        "number": "02",
+        "title": "Performance",
+        "subtitle": "Summary over the reference period"
+      },
+      "metrics": {
+        "views": {
+          "label": "Total views · last 30 days",
+          "sub": "Instagram Graph · metric=views"
+        },
+        "reach": {
+          "label": "Accounts reached",
+          "sub": "Instagram Graph · metric=reach"
+        },
+        "accounts_engaged": {
+          "label": "Engaged accounts",
+          "sub": "Instagram Graph · metric=accounts_engaged"
+        },
+        "total_interactions": {
+          "label": "Interactions",
+          "sub": "Likes, comments, shares, saves"
+        },
+        "profile_views": {
+          "label": "Profile views",
+          "sub": "Instagram Graph · metric=profile_views"
+        },
+        "followers": {
+          "label": "Followers",
+          "sub": "Profile field · followers_count"
+        }
+      }
+    },
+    "reels": {
+      "section": {
+        "number": "03",
+        "title": "Viral Content",
+        "subtitle": "Top 5 ranked by views among reels available through Instagram Graph"
+      },
+      "tableAriaLabel": "Reels ranked by lifetime views",
+      "columns": {
+        "content": "Content",
+        "views": "Views",
+        "engagement": "Engagement"
+      },
+      "apiNote": "Instagram Graph does not provide a direct global ranking: this ranking is calculated from reels available through /media using the scanLimit depth.",
+      "fallbackTitle": "Instagram reel",
+      "empty": "No rankable reel returned by the API."
+    },
+    "audience": {
+      "section": {
+        "number": "05",
+        "title": "Audience",
+        "subtitle": "Demographics & geography"
+      },
+      "unavailable": "Data unavailable.",
+      "ageTitle": "Age breakdown",
+      "genderTitle": "Gender breakdown",
+      "men": "Men",
+      "women": "Women",
+      "citiesTitle": "Main cities in France",
+      "countriesTitle": "Main countries",
+      "insightTitle": "Key insight"
+    },
+    "contact": {
+      "section": {
+        "number": "07",
+        "title": "Contact",
+        "subtitle": "Partnerships & briefs"
+      },
+      "emailLabel": "Email",
+      "instagramLabel": "Instagram"
+    },
+    "export": {
+      "ariaLabel": "Media kit export",
+      "button": "Export as PDF"
+    },
+    "footer": {
+      "usage": "Media Kit — professional use",
+      "updatedPrefix": "Last document update:"
+    }
+  }
+}

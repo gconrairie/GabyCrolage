@@ -26,18 +26,51 @@ const FRENCH_CITY_MARKERS = [
 ]
 
 const COUNTRY_NAMES = {
-  FR: 'France',
-  US: 'États-Unis',
-  DE: 'Allemagne',
-  GB: 'Royaume-Uni',
-  BE: 'Belgique',
-  CA: 'Canada',
-  ES: 'Espagne',
-  IT: 'Italie',
-  CH: 'Suisse',
-  NL: 'Pays-Bas',
-  AU: 'Australie',
-  TR: 'Turquie',
+  fr: {
+    FR: 'France',
+    US: 'États-Unis',
+    DE: 'Allemagne',
+    GB: 'Royaume-Uni',
+    BE: 'Belgique',
+    CA: 'Canada',
+    ES: 'Espagne',
+    IT: 'Italie',
+    CH: 'Suisse',
+    NL: 'Pays-Bas',
+    AU: 'Australie',
+    TR: 'Turquie',
+  },
+  en: {
+    FR: 'France',
+    US: 'United States',
+    DE: 'Germany',
+    GB: 'United Kingdom',
+    BE: 'Belgium',
+    CA: 'Canada',
+    ES: 'Spain',
+    IT: 'Italy',
+    CH: 'Switzerland',
+    NL: 'Netherlands',
+    AU: 'Australia',
+    TR: 'Turkey',
+  },
+}
+
+const AUDIENCE_INSIGHT_COPY = {
+  fr: {
+    conjunction: ' et ',
+    age: (label, pct) => `la tranche ${label} est la plus représentée (${pct}%)`,
+    france: (pct) => `la France concentre ${pct}% des followers renseignés`,
+    fallback:
+      'Les données démographiques disponibles viennent directement des répartitions Instagram Graph.',
+  },
+  en: {
+    conjunction: ' and ',
+    age: (label, pct) => `${label} is the most represented age group (${pct}%)`,
+    france: (pct) => `France accounts for ${pct}% of identified followers`,
+    fallback:
+      'The available demographic data comes directly from Instagram Graph breakdowns.',
+  },
 }
 
 function breakdownResults(detail) {
@@ -71,11 +104,13 @@ function cityName(label) {
   return String(label).split(',')[0].trim()
 }
 
-function countryLabel(code) {
-  return COUNTRY_NAMES[code] || code
+function countryLabel(code, language) {
+  return COUNTRY_NAMES[language]?.[code] || code
 }
 
-function buildAudience(details) {
+function buildAudience(details, language) {
+  const insightCopy = AUDIENCE_INSIGHT_COPY[language] || AUDIENCE_INSIGHT_COPY.fr
+  const locale = language === 'en' ? 'en-US' : 'fr-FR'
   const age = toDistribution(details?.['follower_demographics.age']).sort((a, b) => {
     const order = ['13-17', '18-24', '25-34', '35-44', '45-54', '55-64', '65+']
     return order.indexOf(a.label) - order.indexOf(b.label)
@@ -92,16 +127,16 @@ function buildAudience(details) {
   const insightParts = []
   if (topAge) {
     insightParts.push(
-      `la tranche ${topAge.label} est la plus représentée (${topAge.pct.toLocaleString('fr-FR', {
+      insightCopy.age(topAge.label, topAge.pct.toLocaleString(locale, {
         maximumFractionDigits: 1,
-      })}%)`,
+      })),
     )
   }
   if (france) {
     insightParts.push(
-      `la France concentre ${france.pct.toLocaleString('fr-FR', {
+      insightCopy.france(france.pct.toLocaleString(locale, {
         maximumFractionDigits: 1,
-      })}% des followers renseignés`,
+      })),
     )
   }
 
@@ -109,14 +144,14 @@ function buildAudience(details) {
     age,
     gender,
     cities,
-    countries: countries.map((row) => ({ ...row, label: countryLabel(row.label) })),
+    countries: countries.map((row) => ({ ...row, label: countryLabel(row.label, language) })),
     insight: insightParts.length
-      ? `${insightParts.join(' et ')}.`
-      : 'Les données démographiques disponibles viennent directement des répartitions Instagram Graph.',
+      ? `${insightParts.join(insightCopy.conjunction)}.`
+      : insightCopy.fallback,
   }
 }
 
-export function useInstagramInsights() {
+export function useInstagramInsights(language = 'fr') {
   const [state, setState] = useState({ loading: true, data: null, error: null })
 
   useEffect(() => {
@@ -146,7 +181,7 @@ export function useInstagramInsights() {
       profile: state.data?.user?.profile || null,
       metrics30d: state.data?.insights_period_day_cumulative_30j || {},
       metricDetails30d: state.data?.insights_period_day_details || {},
-      audience: buildAudience(details),
+      audience: buildAudience(details, language),
     }
-  }, [state])
+  }, [state, language])
 }

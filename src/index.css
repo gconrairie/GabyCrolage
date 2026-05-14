@@ -21,13 +21,15 @@
 }
 
 @theme {
-  --font-sans:  'DM Sans', sans-serif;
-  --font-mono:  'DM Mono', monospace;
+  --font-sans: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
   --font-serif: 'Playfair Display', serif;
+  --color-accent: var(--accent);
 }
 
 /* ── Reset & base (@layer base : les utilitaires Tailwind passent après) ── */
 @layer base {
+
   *,
   *::before,
   *::after {
