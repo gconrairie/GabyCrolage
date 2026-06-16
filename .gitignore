@@ -1,6 +1,7 @@
 node_modules
 dist
 .cache
+.data
 .pnpm-store
 .env
 .env.*

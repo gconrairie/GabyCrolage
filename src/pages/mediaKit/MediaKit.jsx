@@ -9,6 +9,7 @@ import { formatMediaKitDateTime } from './utils'
 import { formatCompactMetric } from './numberFormat'
 import { useInstagramInsights } from './hooks/useInstagramInsights'
 import { useTopInstagramReels } from './hooks/useTopInstagramReels'
+import { useStoryStats } from './hooks/useStoryStats'
 import MetricSpinner from './MetricSpinner'
 import MediaKitCover from './MediaKitCover'
 import MediaKitProfile from './MediaKitProfile'
@@ -44,6 +45,7 @@ export default function MediaKit() {
 
   const insights = useInstagramInsights(language)
   const topReels = useTopInstagramReels()
+  const storyStats = useStoryStats(30)
   const refreshedAt = insights.data?.cache?.cachedAt || insights.data?.fetchedAt || ''
   const kitUpdated = formatMediaKitDateTime(refreshedAt, locale)
 
@@ -89,6 +91,18 @@ export default function MediaKit() {
         <MetricSpinner label={`${copy.loading.metric} ${key}`} />
       )
     const labels = copy.performances.metrics
+    const storyAvg =
+      typeof storyStats.averageViews === 'number'
+        ? Math.round(storyStats.averageViews).toLocaleString(locale)
+        : null
+    const storySub =
+      storyStats.storyCount > 0
+        ? `${labels.story_avg_views.sub} · ${storyStats.storyCount.toLocaleString(locale)} ${
+            storyStats.storyCount > 1
+              ? labels.story_avg_views.countPlural
+              : labels.story_avg_views.countSingular
+          }`
+        : labels.story_avg_views.sub
 
     return [
       {
@@ -98,14 +112,14 @@ export default function MediaKit() {
         sub: labels.views.sub,
       },
       {
+        value: storyAvg || <MetricSpinner label={copy.loading.storyAvgViews} />,
+        label: labels.story_avg_views.label,
+        sub: storySub,
+      },
+      {
         value: metric('reach'),
         label: labels.reach.label,
         sub: labels.reach.sub,
-      },
-      {
-        value: metric('accounts_engaged'),
-        label: labels.accounts_engaged.label,
-        sub: labels.accounts_engaged.sub,
       },
       {
         value: metric('total_interactions'),
@@ -123,7 +137,15 @@ export default function MediaKit() {
         sub: labels.followers.sub,
       },
     ]
-  }, [insights.metrics30d, followersFormatted, copy.performances.metrics, copy.loading, locale])
+  }, [
+    insights.metrics30d,
+    followersFormatted,
+    storyStats.averageViews,
+    storyStats.storyCount,
+    copy.performances.metrics,
+    copy.loading,
+    locale,
+  ])
 
   useEffect(() => {
     document.title = copy.documentTitle

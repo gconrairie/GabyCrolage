@@ -14,7 +14,6 @@ export default function MediaKitPerformances({ perfCells, copy }) {
           >
             <span className="mkit-metric__val">{cell.value}</span>
             <span className="mkit-metric__lbl">{cell.label}</span>
-            <span className="mkit-metric__sub">{cell.sub}</span>
           </li>
         ))}
       </ul>

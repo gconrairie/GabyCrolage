@@ -11,6 +11,9 @@ services:
     env_file: .env
     environment:
       PORT: "8080"
+      IG_STORY_STATS_FILE: "/app/.data/instagram-story-stats.json"
+    volumes:
+      - instagram_data:/app/.data
     networks:
       - npm_graab
     # Pas de `ports:` : accès via le réseau Docker (NPM).
@@ -23,3 +26,6 @@ networks:
   npm_graab:
     external: true
     name: npm-graab
+
+volumes:
+  instagram_data:

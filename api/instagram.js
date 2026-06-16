@@ -5,6 +5,12 @@ import {
   fetchTopReels,
 } from '../lib/instagramEndpoints.js'
 import { fetchInstagramGraphRaw } from '../lib/instagramGraphRaw.js'
+import { diagnoseInstagramAccess } from '../lib/instagramDiagnostics.js'
+import {
+  collectStoryStats,
+  fetchActiveStoryStats,
+  readStoryStats,
+} from '../lib/instagramStories.js'
 import { cachedResult } from '../lib/apiCache.js'
 
 function readQuery(req) {
@@ -26,6 +32,12 @@ function sendJson(res, status, obj) {
   res.setHeader('Content-Type', 'application/json')
   res.setHeader('Cache-Control', 'no-store')
   res.end(JSON.stringify(obj))
+}
+
+function canCollectStories(req, q) {
+  const expected = process.env.IG_COLLECT_SECRET
+  if (!expected) return true
+  return q.secret === expected || req.headers?.['x-collect-secret'] === expected
 }
 
 export default async function handler(req, res) {
@@ -91,11 +103,60 @@ export default async function handler(req, res) {
       return
     }
 
+    if (action === 'diagnose' || action === 'debug') {
+      sendJson(res, 200, {
+        ok: true,
+        ...(await diagnoseInstagramAccess({ token, userId })),
+      })
+      return
+    }
+
+    if (action === 'stories') {
+      const { data, cache } = await cachedResult(
+        { scope: 'instagram', userId, action: 'stories', version: 1 },
+        async () => ({
+          stories: await fetchActiveStoryStats({ token, userId }),
+          note:
+            'Instagram Graph ne renvoie que les stories actives. Pour un KPI 30 jours, utiliser collect-stories quotidiennement.',
+        }),
+      )
+      sendJson(res, 200, { ok: true, ...data, cache })
+      return
+    }
+
+    if (action === 'collect-stories') {
+      if (!canCollectStories(req, q)) {
+        sendJson(res, 403, { ok: false, error: 'Secret de collecte invalide.' })
+        return
+      }
+      sendJson(res, 200, {
+        ok: true,
+        ...(await collectStoryStats({
+          token,
+          userId,
+          statsFile: process.env.IG_STORY_STATS_FILE,
+        })),
+      })
+      return
+    }
+
+    if (action === 'story-stats') {
+      const days = Math.min(90, Math.max(1, Number(q.days || 30) || 30))
+      sendJson(res, 200, {
+        ok: true,
+        ...(await readStoryStats({
+          statsFile: process.env.IG_STORY_STATS_FILE,
+          days,
+        })),
+      })
+      return
+    }
+
     if (action === 'top-reels' || action === 'topReels') {
       const limit = Math.min(10, Math.max(1, Number(q.limit || 5) || 5))
       const scanLimit = Math.min(200, Math.max(limit, Number(q.scanLimit || 100) || 100))
       const { data, cache } = await cachedResult(
-        { scope: 'instagram', userId, action: 'top-reels', limit, scanLimit },
+        { scope: 'instagram', userId, action: 'top-reels', version: 2, limit, scanLimit },
         async () => ({
           reels: await fetchTopReels({ token, userId, limit, scanLimit }),
           note:
@@ -112,7 +173,8 @@ export default async function handler(req, res) {
 
     sendJson(res, 400, {
       ok: false,
-      error: 'action inconnue. Utiliser profile, reel&mediaId=…, insights ou top-reels',
+      error:
+        'action inconnue. Utiliser profile, reel&mediaId=…, insights, stories, collect-stories, story-stats, diagnose ou top-reels',
     })
   } catch (e) {
     sendJson(res, 500, {

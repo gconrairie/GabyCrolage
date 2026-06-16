@@ -8,11 +8,12 @@
       "languageTitle": "Langue"
     },
     "skipLink": "Aller au contenu",
-    "loading": {
-      "followers": "Chargement abonnés",
-      "views30d": "Chargement vues 30 jours",
-      "bestReel": "Chargement best reel",
-      "metric": "Chargement",
+      "loading": {
+        "followers": "Chargement abonnés",
+        "views30d": "Chargement vues 30 jours",
+        "bestReel": "Chargement best reel",
+        "storyAvgViews": "Chargement moyenne vues stories",
+        "metric": "Chargement",
       "reel": "Chargement du reel",
       "reelViews": "Chargement vues reel",
       "reelEngagement": "Chargement engagement reel",
@@ -67,6 +68,12 @@
         "views": {
           "label": "Vues totales · 30 derniers jours",
           "sub": "Instagram Graph · metric=views"
+        },
+        "story_avg_views": {
+          "label": "Vues moyennes par story",
+          "sub": "Stories collectées · 30 derniers jours",
+          "countSingular": "story collectée",
+          "countPlural": "stories collectées"
         },
         "reach": {
           "label": "Comptes touchés",
@@ -148,11 +155,12 @@
       "languageTitle": "Language"
     },
     "skipLink": "Skip to content",
-    "loading": {
-      "followers": "Loading followers",
-      "views30d": "Loading 30-day views",
-      "bestReel": "Loading best reel",
-      "metric": "Loading",
+      "loading": {
+        "followers": "Loading followers",
+        "views30d": "Loading 30-day views",
+        "bestReel": "Loading best reel",
+        "storyAvgViews": "Loading average story views",
+        "metric": "Loading",
       "reel": "Loading reel",
       "reelViews": "Loading reel views",
       "reelEngagement": "Loading reel engagement",
@@ -207,6 +215,12 @@
         "views": {
           "label": "Total views · last 30 days",
           "sub": "Instagram Graph · metric=views"
+        },
+        "story_avg_views": {
+          "label": "Average views per story",
+          "sub": "Collected stories · last 30 days",
+          "countSingular": "story collected",
+          "countPlural": "stories collected"
         },
         "reach": {
           "label": "Accounts reached",
