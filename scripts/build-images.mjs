@@ -22,20 +22,31 @@ async function fileExists(p) {
   }
 }
 
+async function findSourceWebp(w) {
+  const sources = [
+    path.join(srcDir, `${base}-${w}w.webp`),
+    path.join(outDir, `${base}-${w}w.webp`),
+  ]
+
+  for (const source of sources) {
+    if (await fileExists(source)) return source
+  }
+
+  throw new Error(`Image source manquante: assets/images/${base}-${w}w.webp ou public/assets/images/${base}-${w}w.webp`)
+}
+
 async function main() {
   await ensureDir(outDir)
 
   const tasks = variants.map(async (w) => {
-    const srcWebp = path.join(srcDir, `${base}-${w}w.webp`)
-    if (!(await fileExists(srcWebp))) {
-      throw new Error(`Image source manquante: ${path.relative(root, srcWebp)}`)
-    }
-
+    const srcWebp = await findSourceWebp(w)
     const outWebp = path.join(outDir, `${base}-${w}w.webp`)
     const outAvif = path.join(outDir, `${base}-${w}w.avif`)
 
     // Copie webp pour servir en statique en prod (/assets/images/…)
-    await fs.copyFile(srcWebp, outWebp)
+    if (srcWebp !== outWebp) {
+      await fs.copyFile(srcWebp, outWebp)
+    }
 
     // Génère AVIF (si non présent ou source plus récente)
     const [srcStat, avifStat] = await Promise.all([
@@ -56,4 +67,3 @@ main().catch((e) => {
   console.error(e)
   process.exit(1)
 })
-
