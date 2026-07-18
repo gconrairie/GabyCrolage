@@ -51,11 +51,11 @@
         "after": " & créateur."
       },
       "bio": [
-        { "text": "Je suis Gaby Crolage, comédien et humoriste basé en France. Sur Instagram, je partage des " },
-        { "text": "reels humoristiques inspirés du quotidien", "strong": true },
-        { "text": ", avec un regard décalé et accessible. Mon contenu aborde des situations simples et universelles qui parlent facilement au public et suscitent régulièrement de belles interactions. Certains reels ont atteint " },
-        { "text": "plusieurs millions de vues", "strong": true },
-        { "text": " et sont majoritairement diffusés en dehors de ma communauté, ce qui me permet de toucher une audience large de manière naturelle." }
+        { "text": "Je suis Gaby Crolage, comédien et humoriste basé en France. Je crée principalement des " },
+        { "text": "chansons humoristiques à la manière de Georges Brassens", "strong": true },
+        { "text": ", dans lesquelles je mêle écriture, interprétation et regard décalé sur le quotidien. " },
+        { "text": "Mes textes s'inspirent de situations universelles et authentiques", "strong": true },
+        { "text": " pour proposer une chanson française à la fois drôle, populaire et singulière, pensée pour toucher un large public sur les réseaux sociaux." }
       ]
     },
     "performances": {
@@ -198,11 +198,11 @@
         "after": " & creator."
       },
       "bio": [
-        { "text": "I am Gaby Crolage, an actor and comedian based in France. On Instagram, I share " },
-        { "text": "comedy reels inspired by everyday life", "strong": true },
-        { "text": ", with an offbeat and accessible point of view. My content focuses on simple, universal situations that resonate quickly with viewers and regularly drive strong interactions. Some reels have reached " },
-        { "text": "several million views", "strong": true },
-        { "text": " and are mostly distributed beyond my own community, allowing me to reach a broad audience organically." }
+        { "text": "I am Gaby Crolage, an actor and comedian based in France. I mainly create " },
+        { "text": "humorous songs in the style of Georges Brassens", "strong": true },
+        { "text": ", blending songwriting, performance, and an offbeat perspective on everyday life. " },
+        { "text": "My lyrics draw on universal, authentic situations", "strong": true },
+        { "text": " to create French songs that are funny, accessible, and distinctive, designed to reach a broad audience on social media." }
       ]
     },
     "performances": {

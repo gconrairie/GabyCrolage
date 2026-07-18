@@ -41,14 +41,14 @@ export const MEDIA_KIT = {
   bio: {
     lead: (
       <Fragment>
-        Je suis Gaby Crolage, comédien et humoriste basé en France. Sur Instagram, je partage mon regard décalé
-        sur le quotidien à travers des reels humoristiques qui trouvent un écho immédiat auprès de mon audience.{' '}
+        Je suis Gaby Crolage, comédien et humoriste basé en France. Je crée principalement des{' '}
+        <strong>chansons humoristiques à la manière de Georges Brassens</strong>, dans lesquelles je mêle écriture,
+        interprétation et regard décalé sur le quotidien.{' '}
         <strong>
-          Mon contenu, ancré dans des situations universelles et authentiques, génère une viralité organique
-          exceptionnelle
+          Mes textes s&apos;inspirent de situations universelles et authentiques
         </strong>{' '}
-        — mes meilleurs reels atteignent plusieurs millions de vues avec 99% de diffusion hors abonnés, signe
-        d&apos;un algorithme qui pousse massivement le contenu au-delà de ma communauté.
+        pour proposer une chanson française à la fois drôle, populaire et singulière, pensée pour toucher un large
+        public sur les réseaux sociaux.
       </Fragment>
     ),
   },
